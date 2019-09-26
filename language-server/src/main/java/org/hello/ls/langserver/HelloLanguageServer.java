@@ -1,6 +1,10 @@
 package org.hello.ls.langserver;
 
-import org.eclipse.lsp4j.*;
+import org.eclipse.lsp4j.CompletionOptions;
+import org.eclipse.lsp4j.InitializeParams;
+import org.eclipse.lsp4j.InitializeResult;
+import org.eclipse.lsp4j.ServerCapabilities;
+import org.eclipse.lsp4j.TextDocumentSyncKind;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
 import org.eclipse.lsp4j.services.LanguageServer;
@@ -13,7 +17,7 @@ public class HelloLanguageServer implements LanguageServer, LanguageClientAware 
     private TextDocumentService textDocumentService;
     private WorkspaceService workspaceService;
     private LanguageClient client;
-    private int exitCode = 0;
+    private int errorCode = 1;
 
     public HelloLanguageServer() {
         this.textDocumentService = new HelloTextDocumentService();
@@ -34,15 +38,15 @@ public class HelloLanguageServer implements LanguageServer, LanguageClientAware 
 
     @Override
     public CompletableFuture<Object> shutdown() {
-        // If shutdown request comes from client, set the exit code to 1.
-        exitCode = 1;
+        // If shutdown request comes from client, set the error code to 0.
+        errorCode = 0;
         return null;
     }
 
     @Override
     public void exit() {
         // Kill the LS on exit request from client.
-        System.exit(exitCode);
+        System.exit(errorCode);
     }
 
     @Override
